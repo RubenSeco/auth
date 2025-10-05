@@ -3,7 +3,6 @@ import AuthLayout from '~/layouts/AuthLayout.astro';
 
 export const prerender = false;
 const email = Astro.cookies.get('email')?.value ?? '';
-console.log(email);
 
 const rememberMe = !!email;
 ---
@@ -107,7 +106,7 @@ const rememberMe = !!email;
 		const formData = new FormData(form);
 
 		const { error } = await actions.registerUser(formData);
-		
+
 		if (error) {
 			Swal.fire({
 				icon: 'error',

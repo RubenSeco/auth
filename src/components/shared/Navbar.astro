@@ -8,16 +8,18 @@
 	<div class='flex items-center'>
 		<ul class='flex items-center space-x-6'>
 			<li class='font-semibold text-gray-700'>
-				<a href="/">Home</a>
+				<a href='/'>Home</a>
 			</li>
 			<li class='font-semibold text-gray-700'>
-				<a href="/protected">Protegido</a>
+				<a href='/protected'>Protegido</a>
 			</li>
 			<li class='font-semibold text-gray-700'>
-				<a href="/login">Ingresar</a>
+				<a href='/login'>Ingresar</a>
 			</li>
-			<li class='font-semibold text-gray-700'>
-				<a href="#">Salir</a>
+			<li
+				id='logout'
+				class='font-semibold text-gray-700'>
+				<a href='#'>Salir</a>
 			</li>
 			<li>
 				<svg
@@ -56,3 +58,14 @@
 		</ul>
 	</div>
 </nav>
+
+<script>
+	import { actions } from 'astro:actions';
+
+	const logoutElement = document.querySelector('#logout') as HTMLLIElement;
+
+	logoutElement?.addEventListener('click', () => {
+		actions.logout();
+		window.location.href = '/';
+	});
+</script>
