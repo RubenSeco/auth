@@ -3,8 +3,9 @@
 
 import { defineAction } from 'astro:actions';
 import { z } from 'astro:schema';
-import { signInWithEmailAndPassword, type AuthError } from 'firebase/auth';
+import { signInWithEmailAndPassword, type AuthError, type UserCredential } from 'firebase/auth';
 import { firebase } from '~/firebase/config';
+
 
 // Ejemplo de acción del lado del servidor
 export const loginUser = defineAction({
@@ -31,15 +32,19 @@ export const loginUser = defineAction({
 
     try {
       const user = await signInWithEmailAndPassword(firebase.auth, email, password);
-      return user;
+
+      return {
+        uid: user.user.uid,
+        email: user.user.email,
+      };
 
     } catch (error) {
       console.log(error);
-      const firebaseError = error as AuthError
+      const firebaseError = error as AuthError;
       if (firebaseError.code === "auth/email-already-in-use") {
-        throw new Error ("El correo ya existe")
+        throw new Error("El correo ya existe");
       }
-      throw new Error("No se pudo realizar el ingreso")
+      throw new Error("No se pudo realizar el ingreso");
     }
     // Ejemplo: consultar en una base de datos o API
   },
