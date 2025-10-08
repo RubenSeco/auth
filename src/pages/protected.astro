@@ -1,20 +1,28 @@
 ---
 import { firebase } from '~/firebase/config';
 import MainLayout from '~/layouts/MainLayout.astro';
+import { defineMiddleware } from 'astro:middleware';
 
 export const prerender = false;
 
-const firebaseUser = firebase.auth.currentUser;
+const { user, isLoggedIn } = Astro.locals;
 
-if (firebaseUser == null) {
+if (!isLoggedIn || !user) {
 	return Astro.redirect('/login');
 }
+const {name, avatar, email, emailVerified } = user;
 
-await firebaseUser?.reload();
+// const firebaseUser = firebase.auth.currentUser;
 
-const { displayName, email, emailVerified, photoURL } = firebaseUser;
+// if (firebaseUser == null) {
+// 	return Astro.redirect('/login');
+// }
 
-const name = displayName ?? 'No display Name';
+// await firebaseUser?.reload();
+
+// const { displayName, email, emailVerified, photoURL } = firebaseUser;
+
+// const name = displayName ?? 'No display Name';
 ---
 
 <MainLayout>
@@ -23,10 +31,10 @@ const name = displayName ?? 'No display Name';
 		class='bg-gray-200 font-sans h-[600px] w-full flex flex-row justify-center items-center rounded-xl drop-shadow-lg'>
 		<div class='card w-96 mx-auto bg-white shadow-xl hover:shadow rounded-xl'>
 			{
-				photoURL ?
+				avatar ?
 					<img
 						class='w-32 mx-auto rounded-full -mt-20 border-8 border-white'
-						src={photoURL}
+						src={avatar}
 						alt={`Avatar de ${name}`}
 					/>
 				:	<div class='w-32 h-32 mx-auto rounded-full -mt-20 border-8 border-white bg-gray-300 flex justify-center items-center'>

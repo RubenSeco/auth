@@ -71,7 +71,7 @@ const rememberMe = !!email;
 					</div>
 					<!--! Ingreso con Google -->
 					<button
-						type='submit'
+						type='button'
 						id='btn-google'
 						class='w-full flex justify-center bg-red-500 hover:bg-green-500 text-gray-100 p-3 rounded-full tracking-wide font-semibold shadow-lg cursor-pointer transition ease-in duration-500 disabled:bg-gray-300'>
 						Ingresar con Google
@@ -98,8 +98,7 @@ const rememberMe = !!email;
 
 <script>
 	import { actions } from 'astro:actions';
-	import { signInWithPopup } from 'firebase/auth';
-	import { GoogleAuthProvider } from 'firebase/auth/web-extension';
+	import { GoogleAuthProvider, signInWithPopup } from 'firebase/auth';
 	import Swal from 'sweetalert2';
 	import { firebase } from '~/firebase/config';
 
@@ -133,15 +132,25 @@ const rememberMe = !!email;
 		btnGoogle.setAttribute('disabled', 'disabled');
 		const provider = new GoogleAuthProvider();
 		try {
+			// Paso 1: Obtener las credenciales del lado del cliente.
 			const credentials = await signInWithPopup(firebase.auth, provider);
 
-			console.log(credentials);
+			// Paso 2: Verificar las credenciales en el backend
+			const { error } = await actions.loginWhithGoogle(credentials);
+
+			if (error) {
+				alert(error.message);
+				btnGoogle.removeAttribute('disabled');
+			}
+			btnGoogle.innerText = 'Redireccionando...';
+			window.location.replace('/protected');
+
 			return;
 		} catch (error) {
 			console.log(error);
+			btnGoogle.removeAttribute('disabled');
 		}
 
-		btnGoogle.removeAttribute('disabled');
 		// window.location.replace('/auth/google');
 	});
 </script>
