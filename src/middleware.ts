@@ -1,24 +1,32 @@
 import { defineMiddleware } from "astro:middleware";
-import { firebase } from '~/firebase/config';
+import { getSession } from "auth-astro/server";
 
 
 const privateRoutes = ["/protected"];
 const notAuthenticatedRoutes = ["/login", "/register"];
 
 // `context` and `next` are automatically typed
-export const onRequest = defineMiddleware(({ url, request, locals, redirect }, next) => {
+export const onRequest = defineMiddleware(async ({ url, request, locals, redirect }, next) => {
 
-  const isLoggedIn = !!firebase.auth.currentUser;
-  const user = firebase.auth.currentUser;
+  const session = await getSession(request);
+
+  const isLoggedIn = !!session;
+  const user = session?.user;
+
+
   locals.isLoggedIn = isLoggedIn;
+  locals.user = null;
+  locals.isAdmin = false;
 
   if (user) {
     locals.user = {
-      email: user.email || '',
-      name: user.displayName || '',
-      avatar: user.photoURL || '',
-      emailVerified: user.emailVerified
+      name: user.name!,
+      email: user.email!,
+
+
+
     };
+    
   }
 
   if (!isLoggedIn && privateRoutes.includes(url.pathname)) {
