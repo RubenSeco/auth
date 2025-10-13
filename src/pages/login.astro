@@ -106,26 +106,35 @@ const rememberMe = !!email;
 	const btnSubmit = document.querySelector('#btn-submit') as HTMLButtonElement;
 	const btnGoogle = document.querySelector('#btn-google') as HTMLButtonElement;
 
+	const {signIn} = await import('auth-astro/client');
+
 	form.addEventListener('submit', async (e) => {
 		e.preventDefault();
 		btnSubmit.setAttribute('disabled', 'disabled');
 
 		const formData = new FormData(form);
 
-		const { error } = await actions.loginUser(formData);
+		// const { error } = await actions.loginUser(formData);
 
-		if (error) {
+		const resp = await signIn('credentials', {
+			email: formData.get('email'),
+			password: formData.get('password'),
+			rememberMe: formData.get('remember_me'),
+		});
+
+		if (resp) {
 			Swal.fire({
 				icon: 'error',
 				title: 'Error al ingresar',
-				text: error.message,
+				text: "Usuario o contraseña incorrecta",
 			});
 
 			btnSubmit.removeAttribute('disabled');
 			return;
 		}
 
-		window.location.replace('/protected');
+		// TODO:
+		window.location.replace('/');
 	});
 
 	btnGoogle.addEventListener('click', async () => {
