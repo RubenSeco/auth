@@ -1,5 +1,6 @@
 import { defineMiddleware } from "astro:middleware";
 import { getSession } from "auth-astro/server";
+import { LocalsNotAnObject } from "node_modules/astro/dist/core/errors/errors-data";
 
 
 const privateRoutes = ["/protected"];
@@ -20,16 +21,13 @@ export const onRequest = defineMiddleware(async ({ url, request, locals, redirec
 
   if (user) {
     locals.user = {
-      name: user.name!,
       email: user.email!,
-
-
-
+      name: user.name!,
     };
-    
+    locals.isAdmin = user.role === "admin";
   }
 
-  if (!isLoggedIn && privateRoutes.includes(url.pathname)) {
+  if (!locals.isAdmin && url.pathname.startsWith("/dashboard")) {
     return redirect("/");
   }
   if (isLoggedIn && notAuthenticatedRoutes.includes(url.pathname)) {

@@ -96,10 +96,7 @@ const rememberMe = !!email;
 </AuthLayout>
 
 <script>
-	import { actions } from 'astro:actions';
-	import { GoogleAuthProvider, signInWithPopup } from 'firebase/auth';
 	import Swal from 'sweetalert2';
-	import { firebase } from '~/firebase/config';
 
 	const form = document.querySelector('form') as HTMLFormElement;
 	const btnSubmit = document.querySelector('#btn-submit') as HTMLButtonElement;
@@ -113,13 +110,14 @@ const rememberMe = !!email;
 
 		const formData = new FormData(form);
 
-		// const { error } = await actions.loginUser(formData);
-
-		const resp = await signIn('credentials', {
+		const data = {
 			email: formData.get('email') as string,
 			password: formData.get('password') as string,
-			redirect: false,
-		});
+			remember_me: formData.get('remember_me') === 'on',
+		};
+		// const { error } = await actions.loginUser(formData);
+
+		const resp = await signIn('credentials', { ...data as any, redirect: false });
 
 		if (resp) {
 			Swal.fire({
@@ -138,16 +136,14 @@ const rememberMe = !!email;
 
 	btnGoogle.addEventListener('click', async () => {
 		btnGoogle.setAttribute('disabled', 'disabled');
-		const provider = new GoogleAuthProvider();
+
 		try {
 			// Paso 1: Obtener las credenciales del lado del cliente.
-			const credentials = await signInWithPopup(firebase.auth, provider);
 
 			// Paso 2: Verificar las credenciales en el backend
-			const { error } = await actions.loginWhithGoogle(credentials);
 
-			if (error) {
-				alert(error.message);
+			if (true) {
+				alert('aun no implemento esto');
 				btnGoogle.removeAttribute('disabled');
 			}
 			btnGoogle.innerText = 'Redireccionando...';

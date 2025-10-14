@@ -1,17 +1,14 @@
 
 
 interface User {
-  email: string;
-  name: string;
-  avatar: string;
-  emailVerified: boolean;
+    name: string;
+    email: string;
 }
 
-
-
 declare namespace App {
-  interface Locals {
-    isLoggedIn: boolean;
-    user?: User;
-  }
+    interface Locals {
+        isLoggedIn: boolean;
+        isAdmin: boolean;
+        user: User | null;
+    }
 }
