@@ -44,7 +44,7 @@ export default async function seed() {
 			title: p.title,
 			type: p.type,
 			user: johnDoe.id,
-			stock: 10,
+			stock: p.stock,
 		};
 		queries.push(db.insert(Product).values(product));
 

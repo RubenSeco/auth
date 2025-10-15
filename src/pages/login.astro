@@ -115,9 +115,8 @@ const rememberMe = !!email;
 			password: formData.get('password') as string,
 			remember_me: formData.get('remember_me') === 'on',
 		};
-		// const { error } = await actions.loginUser(formData);
 
-		const resp = await signIn('credentials', { ...data as any, redirect: false });
+		const resp = await signIn('credentials', { ...data as any });
 
 		if (resp) {
 			Swal.fire({
