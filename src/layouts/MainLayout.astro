@@ -1,9 +1,11 @@
 ---
 import Navbar from '~/components/shared/Navbar.astro';
-import "~/assets/styles/global.css";
+import '~/assets/styles/global.css';
 
 interface Props {
 	title?: string;
+	description?: string;
+	image?: string;
 }
 
 const { title = 'Auth Astro App' } = Astro.props;
@@ -33,7 +35,7 @@ const { title = 'Auth Astro App' } = Astro.props;
 	</head>
 	<body>
 		<Navbar />
-		<main class='container m-auto max-w-3xl px-4'>
+		<main class='container m-auto max-w-5xl px-4 mt-20'>
 			<slot />
 		</main>
 	</body>
