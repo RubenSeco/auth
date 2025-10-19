@@ -59,53 +59,55 @@ if (error) {
 </MainLayout>
 
 <script>
+	import { navigate } from 'astro:transitions/client';
+	import { itemsInCart } from '~/store/cart.store';
 	import { CartCookiesClient } from '~/utils/cart-cookies';
 
-	document.addEventListener('DOMContentLoaded', () => {
+	document.addEventListener('astro:page-load', () => {
 		const sizeElements = document.querySelectorAll('li');
 
 		sizeElements.forEach((el) => {
 			el.addEventListener('click', () => {
-				console.log('click');
-
 				sizeElements.forEach((sizeEl) => sizeEl.classList.remove('selected-size'));
 				el.classList.add('selected-size');
 			});
 		});
-	});
 
-	const quantityInput = document.querySelector('input') as HTMLInputElement;
-	const productIdInput = document.querySelector('#product-id') as HTMLInputElement;
+		const quantityInput = document.querySelector('input');
+		const productIdInput = document.querySelector('#product-id') as HTMLInputElement;
 
-	let quantity = 1;
-	const [decrementButton, incrementButton, addToCardButton] = document.querySelectorAll('button');
+		let quantity = 1;
+		const [decrementButton, incrementButton, addToCardButton] = document.querySelectorAll('button');
 
-	incrementButton.addEventListener('click', () => {
-		quantity = Math.min(quantity + 1, 5);
-		quantityInput.value = quantity.toString();
-	});
+		if (!incrementButton || !quantityInput) return;
 
-	decrementButton.addEventListener('click', () => {
-		quantity = Math.max(quantity - 1, 1);
-		quantityInput.value = quantity.toString();
-	});
-
-	addToCardButton.addEventListener('click', () => {
-		const size = document.querySelector('.selected-size')?.textContent;
-		if (!size) {
-			return alert('Seleccione una talla');
-		}
-		addToCardButton.disabled = true;
-
-		CartCookiesClient.addItem({
-			productId: productIdInput.value,
-			quantity: quantity,
-			size: size,
+		incrementButton.addEventListener('click', () => {
+			quantity = Math.min(quantity + 1, 5);
+			quantityInput.value = quantity.toString();
 		});
 
-		// TODO: Cambiar cuando tengamos los viewTransitions
+		decrementButton.addEventListener('click', () => {
+			quantity = Math.max(quantity - 1, 1);
+			quantityInput.value = quantity.toString();
+		});
 
-		window.location.href = '/cart';
+		addToCardButton.addEventListener('click', () => {
+			const size = document.querySelector('.selected-size')?.textContent;
+			if (!size) {
+				return alert('Seleccione una talla');
+			}
+			addToCardButton.disabled = true;
+
+			const cart = CartCookiesClient.addItem({
+				productId: productIdInput.value,
+				quantity: quantity,
+				size: size,
+			});
+
+			itemsInCart.set(cart.length);
+
+			navigate('/cart');
+		});
 	});
 </script>
 

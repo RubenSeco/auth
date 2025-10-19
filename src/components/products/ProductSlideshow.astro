@@ -50,27 +50,12 @@ const fullImages = images.map((img) => {
 
 	import { Pagination } from 'swiper/modules';
 
-	const swiper = new Swiper('.swiper', {
-		// Optional parameters
-		// direction: 'vertical',
-		// loop: true,
-
-		// If we need pagination
-		pagination: {
-			el: '.swiper-pagination',
-		},
-
-		// Navigation arrows
-		// navigation: {
-		// 	nextEl: '.swiper-button-next',
-		// 	prevEl: '.swiper-button-prev',
-		// },
-
-		// And if we need scrollbar
-		// scrollbar: {
-		// 	el: '.swiper-scrollbar',
-		// },
-
-		modules: [Pagination],
+	document.addEventListener('astro:page-load', () => {
+		const swiper = new Swiper('.swiper', {
+			pagination: {
+				el: '.swiper-pagination',
+			},
+			modules: [Pagination],
+		});
 	});
 </script>

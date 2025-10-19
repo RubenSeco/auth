@@ -1,6 +1,7 @@
 ---
 import Navbar from '~/components/shared/Navbar.astro';
 import '~/assets/styles/global.css';
+import { ClientRouter } from 'astro:transitions';
 
 interface Props {
 	title?: string;
@@ -32,6 +33,7 @@ const { title = 'Auth Astro App' } = Astro.props;
 			rel='stylesheet'
 		/>
 		<title>{title}</title>
+		<ClientRouter />
 	</head>
 	<body>
 		<Navbar />

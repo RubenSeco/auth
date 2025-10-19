@@ -11,7 +11,7 @@ export class CartCookiesClient {
   }
 
   static addItem(cartItem: CartItem): CartItem[] {
-    
+
     const cart = CartCookiesClient.getCart();
 
     const itemInCart = cart.find((item) => item.productId === cartItem.productId && item.size === cartItem.size);
@@ -32,7 +32,7 @@ export class CartCookiesClient {
     const cart = CartCookiesClient.getCart();
 
     const updatedCart = cart.filter((item) => !(item.productId === productId && item.size === size));
-    Cookies.set("cart", JSON.stringify(cart));
+    Cookies.set("cart", JSON.stringify(updatedCart));
 
     return updatedCart;
 
