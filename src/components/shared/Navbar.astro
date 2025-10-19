@@ -20,7 +20,7 @@ const { isLoggedIn, isAdmin } = Astro.locals;
 			</li>
 
 			{
-				isAdmin && (
+				isLoggedIn && (
 					<li class='font-semibold text-gray-700'>
 						<a href='/admin/dashboard'>Admin</a>
 					</li>
